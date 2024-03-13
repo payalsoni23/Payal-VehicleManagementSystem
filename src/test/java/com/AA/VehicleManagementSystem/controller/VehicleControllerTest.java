@@ -37,14 +37,11 @@ public class VehicleControllerTest {
         vehicle.setVehicleYear(2024);
         vehicle.setFuelType("petrol");
         when(vehicleServiceImpl.addVehicle(vehicle)).thenReturn(vehicle);
-        mockMvc.perform(post("/vehicleManagementSystem/addVehicle")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(vehicle)))
-                .andExpect(status().isCreated());
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().isCreated());
     }
 
     @Test
-    public void addVehiclewithExistingVrn() throws Exception {
+    public void addVehicleWithExistingVrn() throws Exception {
         var vehicle = new Vehicle();
         vehicle.setVrn("TEST1");
         vehicle.setModel("test model");
@@ -52,10 +49,18 @@ public class VehicleControllerTest {
         vehicle.setVehicleYear(2024);
         vehicle.setFuelType("petrol");
         when(vehicleServiceImpl.addVehicle(vehicle)).thenThrow(InvalidVehicleException.class);
-        mockMvc.perform(post("/vehicleManagementSystem/addVehicle")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(vehicle)))
-                .andExpect(status().is4xxClientError());
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void addVehicleWithInvalidVrn() throws Exception {
+        var vehicle = new Vehicle();
+        vehicle.setVrn("_&*");
+        vehicle.setModel("test model");
+        vehicle.setMake("test make");
+        vehicle.setVehicleYear(2024);
+        vehicle.setFuelType("petrol");
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -67,16 +72,7 @@ public class VehicleControllerTest {
         vehicle.setVehicleYear(2024);
         vehicle.setFuelType("petrol");
         when(vehicleServiceImpl.updateVehicle("SURA2017", vehicle)).thenReturn(vehicle);
-        mockMvc.perform(put("/vehicleManagementSystem/updateVehicle")
-                        .param("vrn", "SURA2017")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(vehicle)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.vrn").value("SURA2017"))
-                .andExpect(jsonPath("$.model").value("test model"))
-                .andExpect(jsonPath("$.make").value("test make"))
-                .andExpect(jsonPath("$.vehicleYear").value(2024))
-                .andExpect(jsonPath("$.fuelType").value("petrol"));
+        mockMvc.perform(put("/vehicleManagementSystem/updateVehicle").param("vrn", "SURA2017").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.vrn").value("SURA2017")).andExpect(jsonPath("$.model").value("test model")).andExpect(jsonPath("$.make").value("test make")).andExpect(jsonPath("$.vehicleYear").value(2024)).andExpect(jsonPath("$.fuelType").value("petrol"));
     }
 
     @Test
@@ -88,11 +84,7 @@ public class VehicleControllerTest {
         vehicle.setVehicleYear(2024);
         vehicle.setFuelType("petrol");
         when(vehicleServiceImpl.updateVehicle("INVALID", vehicle)).thenThrow(InvalidVehicleException.class);
-        mockMvc.perform(put("/vehicleManagementSystem/updateVehicle")
-                        .param("vrn", "INVALID")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(vehicle)))
-                .andExpect(status().is4xxClientError());
+        mockMvc.perform(put("/vehicleManagementSystem/updateVehicle").param("vrn", "INVALID").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -112,14 +104,7 @@ public class VehicleControllerTest {
         vehicles.add(vehicle3);
 
         when(vehicleServiceImpl.getVehicles(List.of("VAND2019", "NOLO2022", "HOSR2016"))).thenReturn(vehicles);
-        mockMvc.perform(get("/vehicleManagementSystem/find")
-                        .param("vrnList", "VAND2019", "NOLO2022", "HOSR2016")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(vehicles)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$[0].vrn").value("VAND2019"))
-                .andExpect(jsonPath("$[1].vrn").value("NOLO2022"))
-                .andExpect(jsonPath("$[2].vrn").value("HOSR2016"));
+        mockMvc.perform(get("/vehicleManagementSystem/find").param("vrnList", "VAND2019", "NOLO2022", "HOSR2016").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicles))).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$[0].vrn").value("VAND2019")).andExpect(jsonPath("$[1].vrn").value("NOLO2022")).andExpect(jsonPath("$[2].vrn").value("HOSR2016"));
 
     }
 
@@ -136,13 +121,7 @@ public class VehicleControllerTest {
         vehicles.add(vehicle3);
 
         when(vehicleServiceImpl.getVehicles(List.of("VAND2019", "INVALIDVRN", "HOSR2016"))).thenReturn(vehicles);
-        mockMvc.perform(get("/vehicleManagementSystem/find")
-                        .param("vrnList", "VAND2019", "INVALIDVRN", "HOSR2016")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(vehicles)))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$[0].vrn").value("VAND2019"))
-                .andExpect(jsonPath("$[1].vrn").value("HOSR2016"));
+        mockMvc.perform(get("/vehicleManagementSystem/find").param("vrnList", "VAND2019", "INVALIDVRN", "HOSR2016").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicles))).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$[0].vrn").value("VAND2019")).andExpect(jsonPath("$[1].vrn").value("HOSR2016"));
 
     }
 }

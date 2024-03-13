@@ -2,6 +2,7 @@ package com.AA.VehicleManagementSystem.controller;
 
 import com.AA.VehicleManagementSystem.domain.Vehicle;
 import com.AA.VehicleManagementSystem.service.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class VehicleController {
 
     //   @Operation(summary = "Add new vehicle details.")
     @PostMapping("/addVehicle")
-    public ResponseEntity<Vehicle> addVehicle(@RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> addVehicle(@Valid @RequestBody Vehicle vehicle) {
         var newVehicle = vehicleManagementService.addVehicle(vehicle);
         return ResponseEntity.status(HttpStatus.CREATED).body(newVehicle);
     }

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ public class Vehicle {
 
     @Id
     @NotNull
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "VRN can be alphanumeric only. Invalid VRN entered.")
     @Column(name = "VRN")
     private String vrn;
 
