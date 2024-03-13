@@ -31,7 +31,11 @@ public class VehicleServiceImpl implements VehicleService {
         if (currentVehicle.equals(vehicle)) {
             log.info("Vehicle details are already updated. No changes required.");
             return currentVehicle;
+        } else if (!currentVehicle.getVrn().equalsIgnoreCase(vrn)) {
+            //vrn has changed. new record will be saved with new vrn provided. delete the record with old vrn
+            vehicleRepository.deleteById(vrn);
         }
+        //vehicle contains updated details for same vrn
         log.info("Vehicle details updated : " + vehicle);
         return vehicleRepository.save(vehicle);
     }
@@ -46,4 +50,5 @@ public class VehicleServiceImpl implements VehicleService {
         }
         return vehiclesByVrn;
     }
+
 }
