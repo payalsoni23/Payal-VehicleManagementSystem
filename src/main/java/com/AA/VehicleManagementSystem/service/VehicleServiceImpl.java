@@ -27,16 +27,13 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle updateVehicle(String vrn, Vehicle vehicle) {
-        var currentVehicle = vehicleRepository.findById(vrn);
-        if (currentVehicle.isPresent()) {
-            if (currentVehicle.get().equals(vehicle)) {
-                log.info("Vehicle details are already updated. No changes required.");
-                return currentVehicle.get();
-            }
-            log.info("Vehicle details updated : " + vehicle);
-            return vehicleRepository.save(vehicle);
+        var currentVehicle = vehicleRepository.findById(vrn).orElseThrow(() -> new InvalidVehicleException(String.format("Vehicle with VRN %s not found.", vrn)));
+        if (currentVehicle.equals(vehicle)) {
+            log.info("Vehicle details are already updated. No changes required.");
+            return currentVehicle;
         }
-        throw new InvalidVehicleException(String.format("Vehicle with VRN %s not found.", vrn));
+        log.info("Vehicle details updated : " + vehicle);
+        return vehicleRepository.save(vehicle);
     }
 
     @Override
