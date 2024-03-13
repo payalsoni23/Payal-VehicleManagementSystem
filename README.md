@@ -2,11 +2,13 @@
 
 This is a simple REST API implementation to create, fetch and update vehicle data using REST endpoints.
 
-#### url:http://localhost:8080
+#### url: http://localhost:8080
+
+#### swagger-url: http://localhost:8080/swagger-ui/index.html
 
 ## VEHICLE SERVICE
 
-This is the interface that contains all the service methods used by the controller for manageing vehicle data.
+This is the interface that contains all the service methods used by the controller for managing vehicle data.
 
 ### Implemented by: VehicleServiceImpl class
 

@@ -16,27 +16,5 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<String> handleBadRequest(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-
-    /*@ExceptionHandler(value
-            = {InvalidVehicleException.class, HttpMessageConversionException.class})
-    protected ResponseEntity<Object> handleNotFoundError(RuntimeException runtimeException, WebRequest webRequest) {
-        var bodyOfResponse = runtimeException.getMessage();
-        return handleExceptionInternal(runtimeException, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, webRequest);
-        if (runtimeException instanceof InvalidVehicleException exception) {
-            return handleExceptionInternal(exception, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, webRequest);
-        } else if (runtimeException instanceof HttpMessageConversionException exception) {
-            return handleExceptionInternal(exception, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
-        } else {
-            return handleExceptionInternal(runtimeException, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, webRequest);
-        }
-}
-
-    @ExceptionHandler(value
-            = {HttpMessageNotReadableException.class})
-    protected ResponseEntity<Object> handleInvalidRequest(RuntimeException runtimeException, WebRequest webRequest) {
-        var bodyOfResponse = runtimeException.getMessage();
-        return handleExceptionInternal(runtimeException, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
-    }*/
 }
 
