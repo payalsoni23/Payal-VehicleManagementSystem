@@ -1,0 +1,10 @@
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('VAND2019', 'Vauxhall', 'crossland', 2019, 'petrol');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('NOLO2022', 'Volkswagen', 'polo', 2022, 'diesel');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('BMOL2023', 'BMW', '320', 2023, 'petrol');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('MEAL2020', 'Mercedes', 'a180', 2020, 'diesel');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('HOSR2016', 'Honda', 'srv', 2016, 'hybrid');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('SUFT2021', 'Suzuki', 'swift', 2021, 'petrol');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('SKIA2017', 'Skoda', 'fabia', 2017, 'hybrid');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('HY3I2015', 'Hyundai', 'i30', 2015, 'petrol');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('AUES2024', 'Audi', 'series 1', 2024, 'petrol');
+INSERT INTO vehicles (VRN, Make, Model, VEHICLE_YEAR, Fuel_Type) VALUES ('SURA2017', 'Suzuki', 'vitara', 2017, 'diesel');

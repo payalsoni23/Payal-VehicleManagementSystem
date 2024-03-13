@@ -8,29 +8,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
-public class VehicleManagementService implements VehicleManagement {
+public class VehicleServiceImpl implements VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
 
     @Override
     public Vehicle addVehicle(Vehicle vehicle) {
-        log.info("Vehicle added: " + vehicle);
+        if (vehicleRepository.findById(vehicle.getVrn()).isPresent()) {
+            throw new InvalidVehicleException(String.format("Vehicle with VRN %s already exists.", vehicle.getVrn()));
+        }
+        log.info("New vehicle details added : " + vehicle);
         return vehicleRepository.save(vehicle);
     }
 
     @Override
     public Vehicle updateVehicle(String vrn, Vehicle vehicle) {
-        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(vrn);
-        if (optionalVehicle.isPresent()) {
-            var updatedVehicle = vehicle.toBuilder().build();
-            log.info("Updated vehicle: " + updatedVehicle);
-            vehicleRepository.save(updatedVehicle);
-            return updatedVehicle;
+        var currentVehicle = vehicleRepository.findById(vrn);
+        if (currentVehicle.isPresent()) {
+            if (currentVehicle.get().equals(vehicle)) {
+                log.info("Vehicle details are already updated. No changes required.");
+                return currentVehicle.get();
+            }
+            log.info("Vehicle details updated : " + vehicle);
+            return vehicleRepository.save(vehicle);
         }
         throw new InvalidVehicleException(String.format("Vehicle with VRN %s not found.", vrn));
     }
@@ -39,12 +43,10 @@ public class VehicleManagementService implements VehicleManagement {
     public List<Vehicle> getVehicles(List<String> vrnList) {
         var vehiclesByVrn = vehicleRepository.findAllById(vrnList);
         var existingVrnList = vehiclesByVrn.stream().map(Vehicle::getVrn).toList();
-        vrnList.forEach(vrn -> {
-                    if (!existingVrnList.contains(vrn)) {
-                        log.info("Vehicle not found with VRN " + vrn);
-                    }
-                }
-        );
+        var vrnNotFound = vrnList.stream().filter(vrn -> !existingVrnList.contains(vrn)).toList();
+        if (!vrnNotFound.isEmpty()) {
+            log.info("Vehicle not found with VRNs: " + vrnNotFound);
+        }
         return vehiclesByVrn;
     }
 }
