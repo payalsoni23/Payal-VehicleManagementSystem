@@ -28,74 +28,79 @@ public class VehicleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+
     @Test
     public void addVehiclewithNewVrn() throws Exception {
-        var vehicle = new Vehicle();
-        vehicle.setVrn("TEST1");
-        vehicle.setModel("test model");
-        vehicle.setMake("test make");
-        vehicle.setVehicleYear(2024);
-        vehicle.setFuelType("petrol");
+        var vehicle = getSampleVehicle();
         when(vehicleServiceImpl.addVehicle(vehicle)).thenReturn(vehicle);
         mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().isCreated());
     }
 
     @Test
     public void addVehicleWithExistingVrn() throws Exception {
-        var vehicle = new Vehicle();
-        vehicle.setVrn("TEST1");
-        vehicle.setModel("test model");
-        vehicle.setMake("test make");
-        vehicle.setVehicleYear(2024);
-        vehicle.setFuelType("petrol");
+        var vehicle = getSampleVehicle();
         when(vehicleServiceImpl.addVehicle(vehicle)).thenThrow(InvalidVehicleException.class);
         mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void addVehicleWithInvalidVrn() throws Exception {
-        var vehicle = new Vehicle();
+        var vehicle = getSampleVehicle();
         vehicle.setVrn("_&*");
-        vehicle.setModel("test model");
-        vehicle.setMake("test make");
-        vehicle.setVehicleYear(2024);
-        vehicle.setFuelType("petrol");
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void addVehicleWithInvalidMake() throws Exception {
+        var vehicle = getSampleVehicle();
+        vehicle.setMake("abc-123.6");
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void addVehicleWithInvalidModel() throws Exception {
+        var vehicle = getSampleVehicle();
+        vehicle.setModel("abc-123.6");
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void addVehicleWithInvalidYear() throws Exception {
+        var vehicle = getSampleVehicle();
+        vehicle.setVehicleYear(20);
+        mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void addVehicleWithInvalidFuelType() throws Exception {
+        var vehicle = getSampleVehicle();
+        vehicle.setFuelType("abc");
         mockMvc.perform(post("/vehicleManagementSystem/addVehicle").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void updateVehicleWithExistingVRN() throws Exception {
-        var vehicle = new Vehicle();
-        vehicle.setVrn("SURA2017");
-        vehicle.setModel("test model");
-        vehicle.setMake("test make");
-        vehicle.setVehicleYear(2024);
-        vehicle.setFuelType("petrol");
-        when(vehicleServiceImpl.updateVehicle("SURA2017", vehicle)).thenReturn(vehicle);
-        mockMvc.perform(put("/vehicleManagementSystem/updateVehicle").param("vrn", "SURA2017").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.vrn").value("SURA2017")).andExpect(jsonPath("$.model").value("test model")).andExpect(jsonPath("$.make").value("test make")).andExpect(jsonPath("$.vehicleYear").value(2024)).andExpect(jsonPath("$.fuelType").value("petrol"));
+        var vehicle = getSampleVehicle();
+        when(vehicleServiceImpl.updateVehicle("TEST1", vehicle)).thenReturn(vehicle);
+        mockMvc.perform(put("/vehicleManagementSystem/updateVehicle").param("vrn", "TEST1").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$.vrn").value("TEST1")).andExpect(jsonPath("$.model").value("testModel")).andExpect(jsonPath("$.make").value("testMake")).andExpect(jsonPath("$.vehicleYear").value(2024)).andExpect(jsonPath("$.fuelType").value("petrol"));
     }
 
     @Test
     public void updateVehicleWithNonExistingVRN() throws Exception {
-        var vehicle = new Vehicle();
-        vehicle.setVrn("INVALID");
-        vehicle.setModel("test model");
-        vehicle.setMake("test make");
-        vehicle.setVehicleYear(2024);
-        vehicle.setFuelType("petrol");
+        var vehicle = getSampleVehicle();
         when(vehicleServiceImpl.updateVehicle("INVALID", vehicle)).thenThrow(InvalidVehicleException.class);
         mockMvc.perform(put("/vehicleManagementSystem/updateVehicle").param("vrn", "INVALID").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicle))).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void getVehiclesbyVRNWithValidVRNs() throws Exception {
-        var vehicle1 = new Vehicle();
+        var vehicle1 = getSampleVehicle();
         vehicle1.setVrn("VAND2019");
 
-        var vehicle2 = new Vehicle();
+        var vehicle2 = getSampleVehicle();
         vehicle2.setVrn("NOLO2022");
 
-        var vehicle3 = new Vehicle();
+        var vehicle3 = getSampleVehicle();
         vehicle3.setVrn("HOSR2016");
 
         var vehicles = new ArrayList<Vehicle>();
@@ -110,10 +115,10 @@ public class VehicleControllerTest {
 
     @Test
     public void getVehiclesbyVRNWithInValidVRNs() throws Exception {
-        var vehicle1 = new Vehicle();
+        var vehicle1 = getSampleVehicle();
         vehicle1.setVrn("VAND2019");
 
-        var vehicle3 = new Vehicle();
+        var vehicle3 = getSampleVehicle();
         vehicle3.setVrn("HOSR2016");
 
         var vehicles = new ArrayList<Vehicle>();
@@ -123,5 +128,15 @@ public class VehicleControllerTest {
         when(vehicleServiceImpl.getVehicles(List.of("VAND2019", "INVALIDVRN", "HOSR2016"))).thenReturn(vehicles);
         mockMvc.perform(get("/vehicleManagementSystem/find").param("vrnList", "VAND2019", "INVALIDVRN", "HOSR2016").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(vehicles))).andExpect(status().is2xxSuccessful()).andExpect(jsonPath("$[0].vrn").value("VAND2019")).andExpect(jsonPath("$[1].vrn").value("HOSR2016"));
 
+    }
+
+    private Vehicle getSampleVehicle() {
+        var vehicle = new Vehicle();
+        vehicle.setVrn("TEST1");
+        vehicle.setModel("testModel");
+        vehicle.setMake("testMake");
+        vehicle.setVehicleYear(2024);
+        vehicle.setFuelType("petrol");
+        return vehicle;
     }
 }

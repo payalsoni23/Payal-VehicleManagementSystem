@@ -171,6 +171,19 @@ curl:
 curl --location 'localhost:8080/vehicleManagementSystem/find?vrnList=VAND2019%2CNOLO2022%2CHY3I2015'
 ```
 
+## Vehicle Field Validations
+
+Vehicle fields will be validated based on the below assumptions. If validation is failed, HTTP error 400 (BAD_REQUEST)
+will be returned.
+
+- VRN : unique alphanumeric value
+- Make : alphanumeric value
+- Model : alphanumeric value
+- Year : range [1000-9999]
+- Fuel type : Petrol, Diesel, Hybrid, Electric
+
+These can be set easily in Vehicle.java file based on the requirements.
+
 ## Database
 
 ### url:http://localhost:8080/h2-console

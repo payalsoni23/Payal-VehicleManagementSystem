@@ -31,7 +31,7 @@ public class VehicleController {
 
     @Operation(description = "REST endpoint to update vehicle data", responses = {@ApiResponse(description = "Success", responseCode = "200"), @ApiResponse(description = "Bad Request", responseCode = "400")})
     @PutMapping("/updateVehicle")
-    public ResponseEntity<Vehicle> updateVehicle(@RequestParam String vrn, @RequestBody Vehicle vehicle) {
+    public ResponseEntity<Vehicle> updateVehicle(@RequestParam String vrn, @Valid @RequestBody Vehicle vehicle) {
         var updatedVehicle = vehicleManagementService.updateVehicle(vrn, vehicle);
         return ResponseEntity.status(HttpStatus.OK).body(updatedVehicle);
     }
